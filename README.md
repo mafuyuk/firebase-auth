@@ -10,3 +10,11 @@ $ firebase deploy
 # デプロイしたサイトを開く
 $ firebase open hosting:site
 ```
+
+
+# go側
+
+```bash
+$ vgo mod -vendor
+
+```
