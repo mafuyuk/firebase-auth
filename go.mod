@@ -3,6 +3,7 @@ module github.com/mafuyuk/firebase-training
 require (
 	firebase.google.com/go v1.0.2
 	github.com/go-chi/chi v0.0.0-20171222161133-e83ac2304db3
+	github.com/go-chi/cors v1.0.0
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/google/go-cmp v0.2.0
 	github.com/pressly/chi v1.0.0
