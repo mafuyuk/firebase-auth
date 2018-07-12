@@ -1,32 +1,36 @@
 package main
 
 import (
-	"context"
-	"log"
+	"net/http"
+	"time"
 
-	firebase "firebase.google.com/go"
-	"google.golang.org/api/option"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 )
 
-var idToken = "dummy"
-
+// curl http://localhost:8080/v1/hello
 func main() {
-	opt := option.WithCredentialsFile("./serviceAccountKey.json")
-	ctx := context.Background()
-	app, err := firebase.NewApp(ctx, nil, opt)
-	if err != nil {
-		log.Fatalln(err)
-		return
-	}
+	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 
-	client, err := app.Auth()
-	if err != nil {
-		log.Fatalln(err)
-	}
-	token, err := client.VerifyIDToken(idToken)
-	if err != nil {
-		log.Fatalf("error verifying ID token: %v\n", err)
-	}
+	r.Use(middleware.Timeout(60 * time.Second))
 
-	log.Printf("Verified ID token: %v\n", token)
+	r.Route("/v1", func(r chi.Router) {
+		r.Get("/hello", handler)
+	})
+
+	http.ListenAndServe(":8080", r)
+}
+
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	rqqID := middleware.GetReqID(ctx)
+	logger := middleware.GetLogEntry(r)
+	logger.Write(200, 1, time.Second)
+
+	w.Write([]byte(`{"request_id":"`+rqqID+`"}`))
 }
