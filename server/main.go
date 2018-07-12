@@ -3,9 +3,11 @@ package main
 import (
 	"net/http"
 	"time"
+	"log"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"fmt"
 )
 
 // curl http://localhost:8080/v1/hello
@@ -18,19 +20,21 @@ func main() {
 
 	r.Use(middleware.Timeout(60 * time.Second))
 
-	r.Route("/v1", func(r chi.Router) {
-		r.Get("/hello", handler)
-	})
+	r.Get("/public", handler)
+	r.Get("/private", handler)
 
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":8000", r)
 }
 
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	ctx := r.Context()
 	rqqID := middleware.GetReqID(ctx)
-	logger := middleware.GetLogEntry(r)
-	logger.Write(200, 1, time.Second)
+	log.Println(rqqID)
 
-	w.Write([]byte(`{"request_id":"`+rqqID+`"}`))
+	w.WriteHeader(200)
+	w.Write([]byte(fmt.Sprintf(`{"id":"%s"}`, rqqID)))
+
 }

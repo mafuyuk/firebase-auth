@@ -12,10 +12,15 @@ $ firebase deploy
 $ firebase open hosting:site
 ```
 
+# vue側
+```bash
+$ cd front && npm run dev
+```
 
 # go側
 
 ```bash
 $ vgo mod -vendor
+$ go run server/main.go
 
 ```
