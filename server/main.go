@@ -1,9 +1,9 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"time"
-	"log"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -20,7 +20,7 @@ func main() {
 
 	cors := cors.New(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins: []string{"*"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
@@ -33,11 +33,10 @@ func main() {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	r.Get("/public", public)
-	r.Get("/private", private)
+	r.Get("/private", authMiddleware(private))
 
 	http.ListenAndServe(":8000", r)
 }
-
 
 func public(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
