@@ -20,14 +20,14 @@ func main() {
 
 	r.Use(middleware.Timeout(60 * time.Second))
 
-	r.Get("/public", handler)
-	r.Get("/private", handler)
+	r.Get("/public", public)
+	r.Get("/private", private)
 
 	http.ListenAndServe(":8000", r)
 }
 
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func public(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	ctx := r.Context()
@@ -35,6 +35,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	log.Println(rqqID)
 
 	w.WriteHeader(200)
-	w.Write([]byte(fmt.Sprintf(`{"id":"%s"}`, rqqID)))
+	w.Write([]byte("hello public!\n"))
+
+}
+
+func private(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	ctx := r.Context()
+	rqqID := middleware.GetReqID(ctx)
+	log.Println(rqqID)
+
+	w.WriteHeader(200)
+	w.Write([]byte("hello private!\n"))
 
 }
