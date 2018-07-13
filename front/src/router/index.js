@@ -7,7 +7,7 @@ import firebase from 'firebase'
 
 Vue.use(Router)
 
-let router =  new Router({
+let router = new Router({
   routes: [
     {
       path: '*',
@@ -41,4 +41,3 @@ router.beforeEach((to, from, next) => {
 })
 
 export default router
-

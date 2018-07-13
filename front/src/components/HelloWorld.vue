@@ -10,35 +10,35 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import firebase from 'firebase'
-  export default {
-    name: 'HelloWorld',
-    data () {
-      return {
-        msg: 'Welcome to Your Vue.js App',
-        name: firebase.auth().currentUser.email
-      }
+import axios from 'axios'
+import firebase from 'firebase'
+export default {
+  name: 'HelloWorld',
+  data () {
+    return {
+      msg: 'Welcome to Your Vue.js App',
+      name: firebase.auth().currentUser.email
+    }
+  },
+  methods: {
+    signOut: function () {
+      firebase.auth().signOut().then(() => {
+        localStorage.removeItem('jwt')
+        this.$router.push('/signin')
+      })
     },
-    methods: {
-      signOut: function () {
-        firebase.auth().signOut().then(() => {
-          localStorage.removeItem('jwt')
-          this.$router.push('/signin')
-        })
-      },
-      apiPublic: async function () {
-        let res = await axios.get('http://localhost:8000/public')
-        this.msg = res.data
-      },
-      apiPrivate: async function () {
-        let res = await axios.get('http://localhost:8000/private', {
-          headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
-        })
-        this.msg = res.data
-      }
+    apiPublic: async function () {
+      let res = await axios.get('http://localhost:8000/public')
+      this.msg = res.data
+    },
+    apiPrivate: async function () {
+      let res = await axios.get('http://localhost:8000/private', {
+        headers: {'Authorization': 'Bearer ' + localStorage.getItem('jwt')}
+      })
+      this.msg = res.data
     }
   }
+}
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->

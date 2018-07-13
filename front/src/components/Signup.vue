@@ -11,26 +11,26 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
+import firebase from 'firebase'
 
-  export default {
-    name: 'Signup',
-    data () {
-      return {
-        email: '',
-        password: ''
-      }
-    },
-    methods: {
-      signUp: function () {
-        firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(user => {
-          console.log('Create account: ', user.email)
-        }).catch(error => {
-          console.log(error.message)
-        })
-      }
+export default {
+  name: 'Signup',
+  data () {
+    return {
+      email: '',
+      password: ''
+    }
+  },
+  methods: {
+    signUp: function () {
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(user => {
+        console.log('Create account: ', user.email)
+      }).catch(error => {
+        console.log(error.message)
+      })
     }
   }
+}
 </script>
 
 <style scoped>
